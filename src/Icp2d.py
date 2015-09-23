@@ -1,27 +1,24 @@
+# -*- coding: utf-8 -*-
+# <nbformat>3.0</nbformat>
 
-# coding: utf-8
-
-# In[1]:
+# <codecell>
 
 # iterative closest point 
 # inspired by http://stackoverflow.com/questions/20120384/iterative-closest-point-icp-implementation-on-python
 
-
-# In[5]:
+# <codecell>
 
 import cv2
 import numpy as np
 import sys
 
-
-# In[6]:
+# <codecell>
 
 def del_miss(indeces, dist, max_dist, th_rate = 0.8):
     th_dist = max_dist * th_rate
     return np.array([indeces[0][np.where(dist.T[0] < th_dist)]])
 
-
-# In[7]:
+# <codecell>
 
 def icp(d1, d2):
     src = np.array([d1.T], copy=True).astype(np.float32)
@@ -52,8 +49,7 @@ def icp(d1, d2):
         
     return Tr[0:2]
 
-
-# In[8]:
+# <codecell>
 
 if __name__ == "__main__":
     import matplotlib.pyplot as plt
@@ -82,8 +78,6 @@ if __name__ == "__main__":
 
     print ret
 
-
-# In[ ]:
-
+# <codecell>
 
 
