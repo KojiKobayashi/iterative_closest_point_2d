@@ -40,7 +40,7 @@ def is_converge(Tr, scale):
 
 # <codecell>
 
-def icp(d1, d2):
+def icp(d1, d2, max_iterate = 100):
     src = np.array([d1.T], copy=True).astype(np.float32)
     dst = np.array([d2.T], copy=True).astype(np.float32)
     
@@ -59,7 +59,7 @@ def icp(d1, d2):
     scale_y = np.max(d1[1]) - np.min(d1[1])
     scale = max(scale_x, scale_y)
        
-    for i in range(100):
+    for i in range(max_iterate):
         ret, results, neighbours, dist = knn.find_nearest(dst[0], 1)
         
         indeces = results.astype(np.int32).T     
