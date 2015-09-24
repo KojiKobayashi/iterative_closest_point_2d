@@ -20,6 +20,26 @@ def del_miss(indeces, dist, max_dist, th_rate = 0.8):
 
 # <codecell>
 
+def is_converge(Tr, scale):
+    delta_angle = 0.0001
+    delta_scale = scale * 0.0001
+    
+    min_cos = 1 - delta_angle
+    max_cos = 1 + delta_angle
+    min_sin = -delta_angle
+    max_sin = delta_angle
+    min_move = -delta_scale
+    max_move = delta_scale
+    
+    return min_cos < Tr[0, 0] and Tr[0, 0] < max_cos and \
+           min_cos < Tr[1, 1] and Tr[1, 1] < max_cos and \
+           min_sin < -Tr[1, 0] and -Tr[1, 0] < max_sin and \
+           min_sin < Tr[0, 1] and Tr[0, 1] < max_sin and \
+           min_move < Tr[0, 2] and Tr[0, 2] < max_move and \
+           min_move < Tr[1, 2] and Tr[1, 2] < max_move
+
+# <codecell>
+
 def icp(d1, d2):
     src = np.array([d1.T], copy=True).astype(np.float32)
     dst = np.array([d2.T], copy=True).astype(np.float32)
@@ -34,8 +54,12 @@ def icp(d1, d2):
 
     dst = cv2.transform(dst, Tr[0:2])
     max_dist = sys.maxint
+    
+    scale_x = np.max(d1[0]) - np.min(d1[0])
+    scale_y = np.max(d1[1]) - np.min(d1[1])
+    scale = max(scale_x, scale_y)
        
-    for i in range(10):
+    for i in range(100):
         ret, results, neighbours, dist = knn.find_nearest(dst[0], 1)
         
         indeces = results.astype(np.int32).T     
@@ -45,7 +69,10 @@ def icp(d1, d2):
 
         max_dist = np.max(dist)
         dst = cv2.transform(dst, T)
-        Tr = np.dot(np.vstack((T,[0,0,1])), Tr)        
+        Tr = np.dot(np.vstack((T,[0,0,1])), Tr)
+        
+        if (is_converge(T, scale)):
+            break
         
     return Tr[0:2]
 
