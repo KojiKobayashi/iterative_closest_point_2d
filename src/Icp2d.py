@@ -11,6 +11,7 @@
 import cv2
 import numpy as np
 import sys
+from numpy.random import *
 
 # <codecell>
 
@@ -81,14 +82,19 @@ def icp(d1, d2, max_iterate = 100):
 if __name__ == "__main__":
     import matplotlib.pyplot as plt
     
-    x1 = np.linspace(0, 1.1, 100)
+    point_count = 100
+    th = np.pi / 8
+    move = np.array([[0.30], [0.5]])
+    rnd_scale = 0.03
+    x1 = np.linspace(0, 1.1, point_count)
     y1 = np.sin(x1 * np.pi)
     d1 = np.array([x1, y1])
 
-    th = np.pi / 8
     rot = np.array([[np.cos(th), -np.sin(th)], [np.sin(th), np.cos(th)]])
-    move = np.array([[0.15], [0.05]])
+    rand = np.random.rand(2, point_count)*rnd_scale
     d2 = np.dot(rot, d1) + move
+    d2 = np.add(d2, rand)
+
 
     ret = icp(d1, d2)
 
