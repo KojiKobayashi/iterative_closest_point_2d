@@ -95,16 +95,20 @@ if __name__ == "__main__":
     d2 = np.dot(rot, d1) + move
     d2 = np.add(d2, rand)
 
-
-    ret = icp(d1, d2)
-
     plt.plot(d1[0], d1[1])
     plt.plot(d2[0], d2[1])
+    plt.show()
+
+# <codecell>
+
+    ret = icp(d1, d2)
+    
+    plt.plot(d1[0], d1[1])
     dst = np.array([d2.T], copy=True).astype(np.float32)
     dst = cv2.transform(dst, ret)
     plt.plot(dst[0].T[0], dst[0].T[1])
     plt.show()
-
+    
     print ret[0][0] * ret[0][0] + ret[0][1] * ret[0][1]
     print np.arccos(ret[0][0]) / 2 / np.pi * 360
     print np.arcsin(ret[0][1]) / 2 / np.pi * 360
